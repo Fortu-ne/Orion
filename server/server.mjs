@@ -28,7 +28,12 @@ const limit = rateLimit({
 
 
 app.use(helmet())
-app.use(cors({ origin: 'http://localhost:5173' }))
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    process.env.CLIENT_URL
+  ].filter(Boolean)   // drops undefined if CLIENT_URL isn't set
+}))
 app.use(morgan('dev'))
 app.use(express.json())
 
