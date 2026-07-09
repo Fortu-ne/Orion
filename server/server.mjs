@@ -38,6 +38,7 @@ app.use(morgan('dev'))
 app.use(express.json())
 
 app.use('/api', rateLimiter)
+app.set('trust proxy', 1)
 
 // Routes
 app.use(route)
