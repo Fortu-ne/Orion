@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+/* ─── Orion design tokens ─────────────────────────────────────────────
+   Void black page, deep space blue cards, cyan glow accent,
+   signal amber for warnings/asteroids.
+   Registered as Tailwind theme values so you can write
+   bg-void, bg-panel, text-glow, text-body, text-dim, border-hairline
+─────────────────────────────────────────────────────────────────────── */
+@theme {
+  --color-void: #0A0E14;      /* page background */
+  --color-panel: #0F1826;     /* card background */
+  --color-hairline: #1C2838;  /* borders */
+  --color-glow: #38BDF8;      /* cyan accent */
+  --color-signal: #F59E0B;    /* amber alerts */
+  --color-body: #E8ECF2;      /* primary text */
+  --color-soft: #A9B4C4;      /* paragraph text */
+  --color-dim: #7A8699;       /* muted labels */
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+html {
+  background: var(--color-void);
+  color: var(--color-body);
+  font-family: var(--font-sans);
+}
+
+/* Telemetry label — the small mono eyebrow used across the app */
+.telemetry {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+.telemetry-accent { color: var(--color-glow); }
+
+/* Leaflet needs a fixed height container */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  background: var(--color-void);
+}

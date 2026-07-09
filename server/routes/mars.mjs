@@ -1,0 +1,21 @@
+import express from 'express'
+import nasa from '../lib/nasa.mjs'
+
+const router = express.Router()
+
+router.get('/', async (req, res) => {
+  try {
+    const { data } = await nasa.get('/mars-photos/api/v1/rovers/perseverance/photos')
+    res.json(data)
+  } catch (error) {
+    console.error('Full error:', error.response?.data || error.message || error)
+    res.status(500).json({ 
+      error: 'Failed to fetch APOD',
+      message: error.message,
+      details: error.response?.data
+    })
+  }
+})
+
+export default router
+
