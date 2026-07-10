@@ -2,10 +2,12 @@ import { NavLink } from 'react-router-dom'
 
 const links = [
   { to: '/', label: 'Picture of the day' },
+    { to: '/launches', label: 'Launches' },
   { to: '/iss', label: 'ISS tracker' },
   { to: '/asteroids', label: 'Asteroids' },
-  { to: '/earth', label: 'Earth' },
-  { to: '/search', label: 'Search' },
+  // { to: '/earth', label: 'Earth' },
+  // { to: '/search', label: 'Search' },
+
 ]
 
 export default function Navbar() {

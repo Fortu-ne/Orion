@@ -1,18 +1,28 @@
 import express from 'express'
 import nasa from '../lib/nasa.mjs'
+import { cache } from '../middleware/cache.mjs'
 
 const router = express.Router()
 
-router.get('/', async (req, res) => {
+router.get('/', cache(600), async (req, res) => {
   try {
-    const { data } = await nasa.get('/neo/rest/v1/feed?start_date=2015-09-07&end_date=2015-09-08')
+    const start = new Date()
+    const end = new Date()
+    end.setDate(end.getDate() + 7)
+
+    const startDate = start.toISOString().split('T')[0]   // "2026-07-10"
+    const endDate = end.toISOString().split('T')[0]
+
+    const { data } = await nasa.get('/neo/rest/v1/feed', {
+      params: { start_date: startDate, end_date: endDate }
+    })
+
     res.json(data)
   } catch (error) {
-    console.error('Full error:', error.response?.data || error.message || error)
-    res.status(500).json({ 
-      error: 'Failed to fetch APOD',
-      message: error.message,
-      details: error.response?.data
+    console.error('Asteroids fetch failed:', error.response?.data || error.message)
+    res.status(500).json({
+      error: 'Failed to fetch asteroid data',
+      message: error.message
     })
   }
 })
