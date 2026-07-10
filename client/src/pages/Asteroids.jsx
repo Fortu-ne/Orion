@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useAsteroids } from '../hooks/useAsteroids.js'
+import { useAsteroids } from '../hooks/useAsteriods.js'
 import { Loader, ErrorMessage } from '../components/UI/Status.jsx'
 
 // Put big numbers in a readable format: 28,450,120 → "28.5M km"

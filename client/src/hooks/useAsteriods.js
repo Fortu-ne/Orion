@@ -1,10 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import api from '../lib/axios.js'
 
-// NeoWs returns asteroids grouped by date:
-// { near_earth_objects: { "2026-07-09": [...], "2026-07-10": [...] } }
-// This hook flattens that into one sorted array the UI can map over,
-// and picks out just the fields we display.
+
 export function useAsteroids() {
   return useQuery({
     queryKey: ['asteroids'],
