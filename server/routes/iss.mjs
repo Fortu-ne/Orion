@@ -1,7 +1,7 @@
 import express from 'express'
 import redis from '../lib/redis.mjs'
 import { cache } from '../middleware/cache.mjs'
-import { fetchISS } from '../lib/issSource.mjs'
+import { fetchISS } from '../lib/iss.mjs'
 
 const router = express.Router()
 
