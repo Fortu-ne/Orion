@@ -1,14 +1,20 @@
+
+
 import express from 'express'
-import redis from '../lib/redis.mjs'
-import { cache } from '../middleware/cache.mjs'
+import { memoryCache, issTrail } from '../lib/memoryStore.mjs'
 import { fetchISS } from '../lib/iss.mjs'
 
 const router = express.Router()
 
 
-router.get('/', cache(10), async (req, res) => {
+
+router.get('/', async (req, res) => {
   try {
+    const cached = memoryCache.get('cache:/api/iss')
+    if (cached) return res.json(cached)
+
     const position = await fetchISS()
+    memoryCache.set('cache:/api/iss', position, 35)
     res.json(position)
   } catch (error) {
     console.error('All ISS sources failed:', error.message)
@@ -17,15 +23,8 @@ router.get('/', cache(10), async (req, res) => {
 })
 
 
-router.get('/trail', async (req, res) => {
-  try {
-    const raw = await redis.lrange('iss:trail', 0, -1)
-    const trail = raw.map((item) => JSON.parse(item)).reverse()
-    res.json(trail)
-  } catch (error) {
-    console.error('ISS trail fetch failed:', error.message)
-    res.status(500).json({ error: 'Failed to fetch ISS trail', message: error.message })
-  }
+router.get('/trail', (req, res) => {
+  res.json(issTrail.toArray())
 })
 
 export default router

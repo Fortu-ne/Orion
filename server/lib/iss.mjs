@@ -1,8 +1,6 @@
 import axios from 'axios'
 
-// Fetches the ISS position with a fallback chain.
-// Primary: wheretheiss.at — full telemetry (altitude + velocity) but unreliable.
-// Fallback: Open Notify — position only, so we substitute ISS averages.
+
 export async function fetchISS() {
   try {
     const { data } = await axios.get(
@@ -28,12 +26,12 @@ export async function fetchISS() {
     return {
       latitude: parseFloat(data.iss_position.latitude),
       longitude: parseFloat(data.iss_position.longitude),
-      altitude: 420,      // ISS orbital average, km
-      velocity: 27600,    // ISS orbital average, km/h
+      altitude: 420,      
+      velocity: 27600,    
       source: 'open-notify',
       timestamp: data.timestamp,
       fetchedAt: new Date().toISOString()
     }
-    // If THIS also throws, the caller's catch handles it — both sources down.
+   
   }
 }

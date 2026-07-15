@@ -5,15 +5,12 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
 
-
-// BullMQ Jobs
-import { scheduleApodFetcher } from './jobs/apodFetcher.mjs'
-import { scheduleIssPoller } from './jobs/issPoller.mjs'
-
 import route from "./routes/routes.mjs";
-
 import rateLimiter from './middleware/rateLimit.mjs'
+import { startJobs } from './jobs/scheduler.mjs'
 
+
+startJobs()
 
 dotenv.config() 
 

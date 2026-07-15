@@ -4,7 +4,6 @@ import { useLaunches } from '../hooks/useLaunches.js'
 import { useCountdown } from '../hooks/useCountdown.js'
 import { Loader, ErrorMessage } from '../components/UI/Status.jsx'
 
-// "in 2 days" / "in 5 hours" — relative time for the list items.
 function relativeTime(iso) {
   const diff = new Date(iso) - Date.now()
   if (diff <= 0) return 'now'
@@ -16,7 +15,6 @@ function relativeTime(iso) {
   return `in ${mins} min`
 }
 
-// One ticking digit block of the hero countdown.
 function TimeBlock({ value, label }) {
   return (
     <div className="text-center">
@@ -28,21 +26,15 @@ function TimeBlock({ value, label }) {
   )
 }
 
-// The hero card for the next launch — only this one gets a live countdown.
 function NextLaunch({ launch }) {
   const { days, hours, minutes, seconds, isPast } = useCountdown(launch.net)
   const isGo = launch.status === 'Go'
 
   return (
     <div className="relative rounded-2xl overflow-hidden border border-hairline mb-12">
-      {/* Dimmed launch image backdrop */}
       {launch.image && (
         <div className="absolute inset-0">
-          <img
-            src={launch.image}
-            alt=""
-            className="w-full h-full object-cover opacity-25"
-          />
+          <img src={launch.image} alt="" className="w-full h-full object-cover opacity-25" />
           <div className="absolute inset-0 bg-gradient-to-t from-void via-void/70 to-void/40" />
         </div>
       )}
@@ -57,10 +49,9 @@ function NextLaunch({ launch }) {
           {launch.provider} · {launch.pad}, {launch.location}
         </p>
 
-        {/* Countdown — or honest states when there isn't one */}
         {isPast ? (
-          <p className="font-mono text-3xl text-glow mb-8">Launched 🚀</p>
-        ) : !isGo && launch.status !== 'TBC' && launch.status !== 'Go' ? (
+          <p className="font-mono text-3xl text-glow mb-8">Launched</p>
+        ) : launch.status !== 'Go' && launch.status !== 'TBC' ? (
           <p className="font-mono text-3xl text-dim mb-8">Window TBD</p>
         ) : (
           <div className="flex items-center gap-4 sm:gap-6 mb-8">
@@ -75,22 +66,35 @@ function NextLaunch({ launch }) {
           </div>
         )}
 
-        {/* Status pill */}
-        <span
-          className={`telemetry border rounded-full px-3 py-1 ${
-            isGo
-              ? 'telemetry-accent border-glow/40'
-              : 'border-hairline'
-          }`}
-        >
-          ● {launch.statusName}
-        </span>
+        <div className="flex items-center gap-3 flex-wrap">
+          <span
+            className={`telemetry border rounded-full px-3 py-1 ${
+              isGo ? 'telemetry-accent border-glow/40' : 'border-hairline'
+            }`}
+          >
+            ● {launch.statusName}
+          </span>
+
+          {/* Webcast link — providers usually publish it close to T-0,
+              so this button often appears in the final hours. */}
+          {launch.videoUrl && (
+            <a
+              href={launch.videoUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="bg-glow text-void font-medium text-sm rounded-lg px-4 py-2
+                         hover:opacity-90 transition-opacity"
+            >
+              Watch live
+            </a>
+          )}
+        </div>
       </div>
     </div>
   )
 }
 
-// One item in the upcoming list — expands in place for mission details.
 function LaunchItem({ launch, isOpen, onToggle }) {
   return (
     <div
@@ -129,8 +133,21 @@ function LaunchItem({ launch, isOpen, onToggle }) {
                   <p className="font-mono text-sm">{launch.pad}</p>
                 </div>
               </div>
+
               {launch.mission && (
-                <p className="text-soft text-sm leading-6">{launch.mission}</p>
+                <p className="text-soft text-sm leading-6 mb-3">{launch.mission}</p>
+              )}
+
+              {launch.videoUrl && (
+                <a
+                  href={launch.videoUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-block text-glow text-sm hover:underline"
+                >
+                  Watch webcast ↗
+                </a>
               )}
             </div>
           </motion.div>
@@ -158,7 +175,6 @@ export default function Launches() {
 
       <p className="telemetry telemetry-accent mb-5">Upcoming</p>
 
-      {/* Telemetry rail + list, same pattern as the asteroids page */}
       <div className="flex">
         <div className="w-px bg-hairline relative shrink-0 mr-6">
           <span className="absolute top-2 -left-[3px] w-[7px] h-[7px] rounded-full bg-glow" />
