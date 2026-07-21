@@ -47,7 +47,7 @@ export default function NextLaunchWidget() {
           <p className="telemetry telemetry-accent">Next launch</p>
           <button
             onClick={(e) => {
-              e.stopPropagation() // don't navigate when dismissing
+              e.stopPropagation() 
               setDismissed(true)
             }}
             className="text-dim hover:text-body transition-colors leading-none"

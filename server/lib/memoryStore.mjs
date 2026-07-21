@@ -1,13 +1,4 @@
-// lib/memoryStore.mjs
-// Single-instance replacements for what Redis was doing.
-// Trade-off (deliberate): state lives in this process's RAM.
-// - Restart wipes it → the scheduler re-warms everything on boot.
-// - Would NOT work across multiple instances → we run exactly one.
 
-// ── TTL cache ────────────────────────────────────────────────────────
-// Map of key → { value, expires }. Lazy expiry: entries are checked
-// on read, and a sweeper clears anything untouched every 10 minutes
-// so the Map can't grow unbounded.
 class MemoryCache {
   #store = new Map()
 
@@ -39,9 +30,7 @@ class MemoryCache {
 export const memoryCache = new MemoryCache()
 setInterval(() => memoryCache.sweep(), 10 * 60 * 1000).unref()
 
-// ── Bounded queue for the ISS trail ─────────────────────────────────
-// A queue in the strict sense: enqueue at the back, evict from the
-// front when capacity is reached (FIFO). Replaces LPUSH + LTRIM.
+
 class BoundedQueue {
   #items = []
   #capacity
@@ -53,11 +42,11 @@ class BoundedQueue {
   enqueue(item) {
     this.#items.push(item)
     if (this.#items.length > this.#capacity) {
-      this.#items.shift() // evict oldest
+      this.#items.shift() 
     }
   }
 
-  // Returns a copy, oldest-first — the order the map draws in.
+ 
   toArray() {
     return [...this.#items]
   }

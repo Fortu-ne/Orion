@@ -11,7 +11,6 @@ export default function APOD() {
   return (
     <main className="grid lg:grid-cols-[1.4fr_1fr] min-h-[calc(100vh-61px)]">
 
-      {/* ── Media panel ── */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -33,7 +32,7 @@ export default function APOD() {
           />
         )}
 
-        {/* Frame badges */}
+       
         <div className="absolute bottom-0 inset-x-0 p-4 flex gap-2 bg-gradient-to-t from-void to-transparent">
           <span className="telemetry telemetry-accent border border-hairline rounded-full px-3 py-1">
             {data.media_type}
@@ -46,9 +45,9 @@ export default function APOD() {
         </div>
       </motion.div>
 
-      {/* ── Info panel with telemetry rail ── */}
+  
       <div className="flex">
-        {/* The rail — thin hairline with a live node */}
+      
         <div className="w-px bg-hairline relative shrink-0">
           <span className="absolute top-10 -left-[3px] w-[7px] h-[7px] rounded-full bg-glow" />
         </div>
@@ -71,7 +70,7 @@ export default function APOD() {
             {data.explanation}
           </p>
 
-          {/* Data cards */}
+       
           <div className="grid grid-cols-2 gap-3 mb-6">
             <div className="bg-panel rounded-xl px-4 py-3">
               <p className="telemetry mb-1">Date</p>

@@ -28,7 +28,7 @@ html {
   font-family: var(--font-sans);
 }
 
-/* Telemetry label — the small mono eyebrow used across the app */
+
 .telemetry {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -38,7 +38,7 @@ html {
 }
 .telemetry-accent { color: var(--color-glow); }
 
-/* Leaflet needs a fixed height container */
+
 .leaflet-container {
   height: 100%;
   width: 100%;

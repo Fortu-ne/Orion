@@ -75,8 +75,7 @@ function NextLaunch({ launch }) {
             ● {launch.statusName}
           </span>
 
-          {/* Webcast link — providers usually publish it close to T-0,
-              so this button often appears in the final hours. */}
+         
           {launch.videoUrl && (
             <a
               href={launch.videoUrl}

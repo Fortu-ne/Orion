@@ -21,7 +21,7 @@ router.get('/date', cache(86400), async (req, res) => {
   try {
     const { date } = req.query
  
-    // Basic date validation before calling NASA
+    
     if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       return res.status(400).json({
         error: 'Invalid date',

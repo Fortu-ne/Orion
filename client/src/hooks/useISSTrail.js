@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import api from '../lib/axios.js'
 
-// Polls the trail every 30s, matching the backend poller's rhythm.
+
 export function useISSTrail() {
   return useQuery({
     queryKey: ['iss-trail'],

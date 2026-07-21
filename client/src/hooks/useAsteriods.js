@@ -17,7 +17,7 @@ export function useAsteroids() {
               name: a.name.replace(/[()]/g, ''),
               date,
               hazardous: a.is_potentially_hazardous_asteroid,
-              // average of min/max estimated diameter, in metres
+    
               diameterM: Math.round(
                 (a.estimated_diameter.meters.estimated_diameter_min +
                   a.estimated_diameter.meters.estimated_diameter_max) / 2
@@ -31,11 +31,11 @@ export function useAsteroids() {
             }
           })
         )
-        // closest approach first
+
         .sort((a, b) => a.missDistanceKm - b.missDistanceKm)
 
       return { count: data.element_count, asteroids: flat }
     },
-    staleTime: 1000 * 60 * 10, // matches the backend's 10 min cache
+    staleTime: 1000 * 60 * 10, 
   })
 }

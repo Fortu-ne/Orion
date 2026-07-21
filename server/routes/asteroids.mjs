@@ -10,7 +10,7 @@ router.get('/', cache(600), async (req, res) => {
     const end = new Date()
     end.setDate(end.getDate() + 7)
 
-    const startDate = start.toISOString().split('T')[0]   // "2026-07-10"
+    const startDate = start.toISOString().split('T')[0]   
     const endDate = end.toISOString().split('T')[0]
 
     const { data } = await nasa.get('/neo/rest/v1/feed', {

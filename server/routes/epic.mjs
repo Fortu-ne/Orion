@@ -9,7 +9,7 @@ router.get('/', cache(86400), async (req, res) => {
     const { data } = await nasa.get('/EPIC/api/natural/images')
 
     const images = data.map((img) => {
-      const [date] = img.date.split(' ')            // "2026-07-08"
+      const [date] = img.date.split(' ')            
       const [y, m, d] = date.split('-')
       return {
         id: img.identifier,

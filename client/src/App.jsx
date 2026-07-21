@@ -19,7 +19,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Navbar />
-        {/* Suspense shows the loader during the chunk download */}
+      
         <Suspense fallback={<Loader label="Loading module" />}>
           <Routes>
             <Route path="/" element={<APOD />} />

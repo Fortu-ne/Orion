@@ -2,13 +2,13 @@ import { motion } from 'framer-motion'
 import { useAsteroids } from '../hooks/useAsteriods.js'
 import { Loader, ErrorMessage } from '../components/UI/Status.jsx'
 
-// Put big numbers in a readable format: 28,450,120 → "28.5M km"
+
 function formatKm(km) {
   if (km >= 1_000_000) return `${(km / 1_000_000).toFixed(1)}M km`
   return `${km.toLocaleString()} km`
 }
 
-// Relatable size comparison — makes the data mean something
+
 function sizeComparison(m) {
   if (m < 20) return 'house-sized'
   if (m < 60) return 'plane-sized'
@@ -28,13 +28,13 @@ export default function Asteroids() {
   return (
     <main className="max-w-5xl mx-auto px-6 py-10">
 
-      {/* ── Header ── */}
+    
       <p className="telemetry telemetry-accent mb-2">Asteroid watch</p>
       <h1 className="font-display font-semibold text-3xl mb-8">
         Near-Earth objects, next 7 days
       </h1>
 
-      {/* ── Summary stats ── */}
+    
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-10">
         <div className="bg-panel rounded-xl px-5 py-4">
           <p className="telemetry mb-1">Tracked</p>
@@ -52,7 +52,7 @@ export default function Asteroids() {
         </div>
       </div>
 
-      {/* ── Asteroid list with telemetry rail ── */}
+   
       <div className="flex">
         <div className="w-px bg-hairline relative shrink-0 mr-6">
           <span className="absolute top-2 -left-[3px] w-[7px] h-[7px] rounded-full bg-glow" />
