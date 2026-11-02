@@ -1,16 +1,17 @@
-
 import express from 'express'
 import axios from 'axios'
 import { cache } from '../middleware/cache.mjs'
+import { fetchWithRetry } from '../lib/fetchWithRetry.mjs'
 
 const router = express.Router()
 
-
 router.get('/', cache(1800), async (req, res) => {
   try {
-    const { data } = await axios.get(
-      'https://ll.thespacedevs.com/2.2.0/launch/upcoming/',
-      { params: { limit: 10, mode: 'detailed' }, timeout: 15000 }
+    const { data } = await fetchWithRetry(() =>
+      axios.get(
+        'https://ll.thespacedevs.com/2.2.0/launch/upcoming/',
+        { params: { limit: 10, mode: 'detailed' }, timeout: 15000 }
+      )
     )
 
     const launches = data.results.map((l) => ({
@@ -30,8 +31,12 @@ router.get('/', cache(1800), async (req, res) => {
 
     res.json(launches)
   } catch (error) {
+    const is429 = error.response?.status === 429
     console.error('Launches fetch failed:', error.response?.status, error.message)
-    res.status(500).json({ error: 'Failed to fetch launches', message: error.message })
+    res.status(is429 ? 429 : 500).json({
+      error: is429 ? 'Launch API rate limit exceeded, try again shortly' : 'Failed to fetch launches',
+      message: error.message
+    })
   }
 })
 

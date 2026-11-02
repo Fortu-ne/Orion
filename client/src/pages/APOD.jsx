@@ -1,28 +1,39 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { useAPOD } from '../hooks/useAPOD.js'
-import { Loader, ErrorMessage } from '../components/UI/Status.jsx'
+import { useAPOD } from '../hooks/useAPOD'
+import { Loader, ErrorMessage } from '../components/UI/Status'
 
 export default function APOD() {
   const { data, isLoading, error } = useAPOD()
+  const [imgLoaded, setImgLoaded]  = useState(false)
 
   if (isLoading) return <Loader label="Aligning telescope" />
-  if (error) return <div className="p-8"><ErrorMessage message={error.message} /></div>
+  if (error)     return <div className="p-8"><ErrorMessage message={error.message} /></div>
+
+  const credit = data.copyright?.trim() || 'NASA / Public domain'
 
   return (
-    <main className="grid lg:grid-cols-[1.4fr_1fr] min-h-[calc(100vh-61px)]">
+    <main className="min-h-[calc(100vh-61px)] grid lg:grid-cols-[1fr_400px]">
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="relative bg-panel flex items-center justify-center overflow-hidden"
-      >
+      {/* ── Left: image / video ── */}
+      <div className="relative bg-void flex items-center justify-center overflow-hidden min-h-[50vh] lg:min-h-0">
+
         {data.media_type === 'image' ? (
-          <img
-            src={data.url}
-            alt={data.title}
-            className="w-full h-full object-cover max-h-[80vh]"
-          />
+          <>
+            {/* Blur placeholder while loading */}
+            {!imgLoaded && (
+              <div className="absolute inset-0 bg-panel animate-pulse" />
+            )}
+            <motion.img
+              src={data.url}
+              alt={data.title}
+              onLoad={() => setImgLoaded(true)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: imgLoaded ? 1 : 0 }}
+              transition={{ duration: 0.6 }}
+              className="w-full h-full object-contain lg:object-cover max-h-[90vh]"
+            />
+          </>
         ) : (
           <iframe
             src={data.url}
@@ -32,70 +43,65 @@ export default function APOD() {
           />
         )}
 
-       
-        <div className="absolute bottom-0 inset-x-0 p-4 flex gap-2 bg-gradient-to-t from-void to-transparent">
-          <span className="telemetry telemetry-accent border border-hairline rounded-full px-3 py-1">
-            {data.media_type}
-          </span>
-          {data.hdurl && (
-            <span className="telemetry border border-hairline rounded-full px-3 py-1">
-              HD available
-            </span>
-          )}
-        </div>
-      </motion.div>
+        {/* HD link — overlaid bottom-left on the image */}
+        {data.hdurl && (
+          <a
+            href={data.hdurl}
+            target="_blank"
+            rel="noreferrer"
+            className="absolute bottom-4 left-4 telemetry text-dim border border-hairline rounded-full px-3 py-1.5 bg-void/70 backdrop-blur hover:text-body hover:border-glow/40 transition-colors"
+          >
+            View HD
+          </a>
+        )}
+      </div>
 
-  
-      <div className="flex">
-      
-        <div className="w-px bg-hairline relative shrink-0">
-          <span className="absolute top-10 -left-[3px] w-[7px] h-[7px] rounded-full bg-glow" />
-        </div>
+      {/* ── Right: info panel ── */}
+      <motion.div
+        initial={{ opacity: 0, x: 16 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="flex flex-col border-l border-hairline overflow-y-auto"
+      >
+        <div className="flex-1 p-7 lg:p-9">
 
-        <motion.div
-          initial={{ opacity: 0, x: 12 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-          className="p-7 flex-1"
-        >
-          <p className="telemetry telemetry-accent mb-4">
-            Astronomy picture of the day
-          </p>
+          {/* Date + credit — sparse, at the top */}
+          <div className="flex items-center justify-between mb-8">
+            <p className="font-mono text-xs text-dim">{data.date}</p>
+            <p className="font-mono text-xs text-dim truncate ml-4 max-w-[160px]" title={credit}>
+              {credit}
+            </p>
+          </div>
 
-          <h1 className="font-display font-semibold text-3xl leading-tight mb-4">
+          {/* Title */}
+          <h1 className="font-display font-semibold leading-tight mb-6"
+              style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)' }}>
             {data.title}
           </h1>
 
-          <p className="text-soft text-sm leading-7 mb-6">
+          {/* Explanation -- readable prose, no box */}
+          <p className="text-soft text-sm leading-7">
             {data.explanation}
           </p>
+        </div>
 
-       
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            <div className="bg-panel rounded-xl px-4 py-3">
-              <p className="telemetry mb-1">Date</p>
-              <p className="font-mono text-sm">{data.date}</p>
-            </div>
-            <div className="bg-panel rounded-xl px-4 py-3">
-              <p className="telemetry mb-1">Credit</p>
-              <p className="font-mono text-sm truncate">
-                {data.copyright?.trim() || 'NASA / Public domain'}
-              </p>
-            </div>
-          </div>
-
+        {/* Footer strip */}
+        <div className="border-t border-hairline px-7 lg:px-9 py-4 flex items-center justify-between gap-4">
+          <span className="telemetry text-dim">
+            {data.media_type === 'video' ? 'Video' : 'Image'}
+          </span>
           {data.hdurl && (
             <a
               href={data.hdurl}
               target="_blank"
               rel="noreferrer"
-              className="inline-block bg-glow text-void font-medium text-sm rounded-lg px-5 py-2.5 hover:opacity-90 transition-opacity"
+              className="bg-glow text-void font-medium text-sm rounded-lg px-4 py-2 hover:opacity-90 transition-opacity"
             >
               View HD image
             </a>
           )}
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </main>
   )
 }

@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import api from '../lib/axios.js'
 
+
+
 export function useAPOD() {
   return useQuery({
     queryKey: ['apod'],
